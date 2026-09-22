@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+langgraph
+langchain
+langchain-core
+langchain-community
+langchain-google-genai
+tavily-python
+langchain-mcp-adapters
+python-dotenv
+aiosqlite
+requests
+pydantic
+langgraph-checkpoint-postgres
+psycopg[binary,pool]
