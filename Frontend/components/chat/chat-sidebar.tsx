@@ -44,20 +44,20 @@ export function ChatSidebar({
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed left-0 top-0 z-50 flex h-full w-72 flex-col border-r border-sidebar-border bg-sidebar transition-transform duration-300 lg:relative lg:z-0 lg:translate-x-0',
+          'fixed left-0 top-0 z-50 flex h-full w-72 flex-col border-r border-sidebar-border bg-sidebar transition-transform duration-300 lg:relative lg:z-0',
           isOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-sidebar-border p-4">
           <h1 className="text-lg font-semibold text-sidebar-foreground">
-            AI Chat
+            Yo-Yo-Bot
           </h1>
           <Button
             variant="ghost"
             size="icon"
             onClick={onToggle}
-            className="text-sidebar-foreground hover:bg-sidebar-accent"
+            className="h-11 w-11 text-sidebar-foreground hover:bg-sidebar-accent" // changed this LOC
           >
             <PanelLeftClose className="h-5 w-5" />
             <span className="sr-only">Close sidebar</span>
@@ -121,7 +121,8 @@ export function ChatSidebar({
           variant="ghost"
           size="icon"
           onClick={onToggle}
-          className="fixed left-4 top-4 z-50 lg:hidden"
+          className="fixed left-4 z-50 h-11 w-11 lg:hidden"
+          style={{ top: 'max(1rem, env(safe-area-inset-top))' }}
         >
           <PanelLeft className="h-5 w-5" />
           <span className="sr-only">Open sidebar</span>

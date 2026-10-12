@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ChatSidebar } from '@/components/chat/chat-sidebar'
 import { ChatWindow } from '@/components/chat/chat-window'
 import { ThemeToggle } from '@/components/theme-toggle'
@@ -10,7 +10,10 @@ import { AlertCircle, RefreshCw, PanelLeft } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
 export default function ChatPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  useEffect(() => {
+    setSidebarOpen(window.matchMedia('(min-width: 1024px)').matches) // changed this LOC
+  }, [])
   const {
     threads,
     activeThreadId,
@@ -25,7 +28,7 @@ export default function ChatPage() {
   } = useChat()
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
+    <div className="flex h-dvh overflow-hidden bg-background">
       {/* Sidebar */}
       <ChatSidebar
         threads={threads}
@@ -40,8 +43,11 @@ export default function ChatPage() {
       {/* Main content */}
       <main className="flex flex-1 flex-col overflow-hidden">
         {/* Header */}
-        <header className="flex items-center justify-between border-b border-border bg-background px-4 py-3">
-          <div className="flex items-center gap-2">
+        <header               // changed this LOC
+          className="flex items-center justify-between border-b border-border bg-background px-4 py-3"
+          style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}
+        >
+          <div className="flex items-center gap-2 pl-12 lg:pl-0"> 
             {!sidebarOpen && (
               <Button
                 variant="ghost"

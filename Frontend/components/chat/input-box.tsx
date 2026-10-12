@@ -46,7 +46,10 @@ export function InputBox({
   }, [input])
 
   return (
-    <div className="border-t border-border bg-background p-4">
+    <div
+      className="border-t border-border bg-background p-4"
+      style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }} // Changed this LOC
+    >
       <div className="mx-auto max-w-3xl">
         <div className="flex items-end gap-2 rounded-2xl border border-input bg-card p-2 shadow-sm transition-shadow focus-within:shadow-md">
           <Textarea
@@ -66,7 +69,7 @@ export function InputBox({
             onClick={handleSubmit}
             disabled={!input.trim() || disabled}
             size="icon"
-            className="h-10 w-10 shrink-0 rounded-xl"
+            className="h-11 w-11 shrink-0 rounded-xl" // Changed this LOC
           >
             <Send className="h-4 w-4" />
             <span className="sr-only">Send message</span>
