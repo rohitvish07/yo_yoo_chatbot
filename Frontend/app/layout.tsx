@@ -2,16 +2,16 @@ import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
+import { ClerkProvider } from '@clerk/nextjs'
 import './globals.css'
 
 const _geist = Geist({ subsets: ['latin'] })
 const _geistMono = Geist_Mono({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'AI Chat Assistant',
+  title: 'Yo-yo Chatbot',
   description:
     'A production-level ChatGPT-like chatbot with multi-thread conversations and streaming responses',
-  generator: 'v0.app',
   icons: {
     icon: [
       {
@@ -47,7 +47,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
       <body className="font-sans antialiased">
         <ThemeProvider
           attribute="class"
@@ -59,6 +60,7 @@ export default function RootLayout({
         </ThemeProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
-    </html>
+      </html>
+    </ClerkProvider>
   )
 }

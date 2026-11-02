@@ -8,8 +8,9 @@ import { useChat } from '@/hooks/use-chat'
 import { Button } from '@/components/ui/button'
 import { AlertCircle, RefreshCw, PanelLeft } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Show, SignIn, UserButton } from '@clerk/nextjs'
 
-export default function ChatPage() {
+function ChatApp() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   useEffect(() => {
     setSidebarOpen(window.matchMedia('(min-width: 1024px)').matches) // changed this LOC
@@ -66,7 +67,10 @@ export default function ChatPage() {
                 : 'New Chat'}
             </h2>
           </div>
-          <ThemeToggle />
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <UserButton />
+          </div>
         </header>
 
         {/* Error alert */}
@@ -96,5 +100,19 @@ export default function ChatPage() {
         </div>
       </main>
     </div>
+  )
+}
+export default function Page() {
+  return (
+    <>
+      <Show when="signed-out">
+        <div className="flex h-dvh items-center justify-center bg-background p-4">
+          <SignIn routing="hash" />
+        </div>
+      </Show>
+      <Show when="signed-in">
+        <ChatApp />
+      </Show>
+    </>
   )
 }

@@ -17,21 +17,16 @@ export interface Thread {
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
+// Every backend call must carry the signed-in user's Clerk token
+function authHeaders(token: string | null): Record<string, string> {
+  return token ? { Authorization: `Bearer ${token}` } : {}
+}
+
 // Fetch all threads
-// export async function getThreads(): Promise<Thread[]> {
-//   const response = await fetch(`${API_BASE_URL}/threads`)
-//   if (!response.ok) {
-//     throw new Error('Failed to fetch threads')
-//   }
-//   const threadIds: string[] = await response.json()
-//   return threadIds.map((id) => ({
-//     thread_id: id,
-//     title: `Chat ${id.slice(0, 8)}...`,
-//   }))
-// }
-// Fetch all threads
-export async function getThreads(): Promise<Thread[]> {
-  const response = await fetch(`${API_BASE_URL}/threads`)
+export async function getThreads(token: string | null): Promise<Thread[]> {
+  const response = await fetch(`${API_BASE_URL}/threads`, {
+    headers: authHeaders(token),
+  })
   if (!response.ok) {
     throw new Error('Failed to fetch threads')
   }
@@ -42,8 +37,13 @@ export async function getThreads(): Promise<Thread[]> {
   }))
 }
 // Fetch chat history for a specific thread
-export async function getChatHistory(threadId: string): Promise<Message[]> {
-  const response = await fetch(`${API_BASE_URL}/chat/${threadId}`)
+export async function getChatHistory(
+  threadId: string,
+  token: string | null
+): Promise<Message[]> {
+  const response = await fetch(`${API_BASE_URL}/chat/${threadId}`, {
+    headers: authHeaders(token),
+  })
   if (!response.ok) {
     throw new Error('Failed to fetch chat history')
   }
@@ -60,6 +60,7 @@ export async function getChatHistory(threadId: string): Promise<Message[]> {
 export async function sendMessage(
   message: string,
   threadId: string,
+  token: string | null,
   onChunk: (chunk: string) => void,
   onToolUsage: (tool: string) => void,
   onComplete: () => void,
@@ -71,6 +72,7 @@ export async function sendMessage(
       headers: {
         'Content-Type': 'application/json',
         Accept: 'text/event-stream',
+        ...authHeaders(token),
       },
       body: JSON.stringify({
         message,

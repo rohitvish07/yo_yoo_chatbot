@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback, useEffect, useRef } from 'react'
+import { useAuth } from '@clerk/nextjs'
 import {
   type Message,
   type Thread,
@@ -11,6 +12,7 @@ import {
 } from '@/lib/api'
 
 export function useChat() {
+  const { getToken } = useAuth()
   const [threads, setThreads] = useState<Thread[]>([])
   const [activeThreadId, setActiveThreadId] = useState<string | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
@@ -43,7 +45,7 @@ export function useChat() {
   const loadThreads = async () => {
     setIsLoadingThreads(true)
     try {
-      const fetchedThreads = await getThreads()
+      const fetchedThreads = await getThreads(await getToken())
       setThreads(fetchedThreads)
       setError(null)
     } catch {
@@ -57,7 +59,7 @@ export function useChat() {
   const loadChatHistory = async (threadId: string) => {
     setIsLoading(true)
     try {
-      const history = await getChatHistory(threadId)
+      const history = await getChatHistory(threadId, await getToken())
       setMessages(history)
       setError(null)
     } catch {
@@ -138,9 +140,12 @@ export function useChat() {
       setIsLoading(true)
       setError(null)
 
+      const token = await getToken()
+
       await sendMessage(
         content,
         threadId,
+        token,
         // onChunk
         (chunk) => {
           setMessages((prev) =>
@@ -189,7 +194,7 @@ export function useChat() {
         }
       )
     },
-    [activeThreadId]
+    [activeThreadId, getToken]
   )
 
   const retry = useCallback(() => {
